@@ -1,0 +1,74 @@
+Il protocollo si suddivide in [header].[identifier].[content]
+
+Il header e' un numero da due cifre.
+Il identifier e' una stringa da 3 caratteri.
+Il content quel puo esserci tutto.
+
+ATTENZIONE!: non tutti i pacchetti richiedono il identifier, ad alcuni bastano direttamente il content.
+
+ - bootstrap = 01.[username]     //non serve identifier
+   il client manda un saluto al server, il content contiene il proprio username.
+
+
+ - joingame = 04.jon.[giocatore.username]          esempio: 04.jog.g1.pippo
+   Il content e' unpo diverso. si divide in due parti: giocatore e username.
+   La parte del giocatore e' sempre da 3 caratteri, quindi facilmente identificabile con il substring.
+   La parte restante e' per forza il username.
+   Il server comunica ai giocatori della stanza che e' entrato qualcuno.
+
+
+ - exitgame = 04.exg.[giocatore.username]  esempio: 04.exg.g2.kaio
+   Il server comunica ai giocatori della stanza che e' uscito qualcuno.
+
+
+ - playcard = 05.[giocatore].[carta]       esempio: 05.g3.05d
+   gg indica il giocatore, poi segue il numero del giocatore.
+
+
+ - get_mano = 06.hnd.[le carte]            esempio: 06.hnd.05d-06d-08b
+   "hnd" sta per "hand".
+   il server dice al client che ha questa mano; nel content ci sono tutte le carte di cui il utente deve avere.
+   quindi e' un sincronizzazione della mano.
+
+
+ - get_card = 06.crd.[carta]               esempio: 06.crd.04b
+   "crd" sta per "card".
+   il server dice al client che ha pescato questa carta.
+   quindi il client deve aggiungere questa carta nella sua mano.   
+   
+
+ - briscola = 11.[carta]                   esempio: 11.05b
+   il server dice al client che questa carta e' una briscola.
+   in questo caso il 5 del bastone e' una briscola.
+
+
+ - sync_room = 12.syn.[content]            esempio: 12.pippo-caio-merzi
+   il server richiede al client di sincronizzare le stanze, quindi il client deve avere esattamente le stanze che ci sono       nel content.
+   per cui il client deve cancellare le stanze che ha gia, ed emergere le stanze che ci sono nel content.
+
+
+ - get_room_name = 12.get.[roomname]       esempio: 12.get.pippo                
+   sempre la stessa operazione 12. cambia il identifier che diventa "get", naturalmente anche il content.
+   il server manda al client questo pacchetto, il content contiene il nome della stanza, e il client aggiunge questa stanza     alla lista.
+
+ 
+ - create_room = 12.cr2.[roomname]         esempio: 12.crt.kaio
+   "crt" intende il "create", il content sarebbe il nome del room.
+   quando il client crea una stanza manda al server questo pacchetto; e server crea la stanza.
+
+- create_room = 12.cr4.[roomname]         esempio: 12.crt.kaio
+   "crt" intende il "create", il content sarebbe il nome del room.
+   quando il client crea una stanza manda al server questo pacchetto; e server crea la stanza.
+
+
+
+ - remove_room = 12.rmv.[roomname]         esempio: 12.rmv.pippo
+   "rmv" sta per "remove".
+   quando il client host esce dalla stanza, il server rimuove la stanza.
+
+
+ - messagechat = 09.[content]          esempio: 09.merzifro***
+ 
+ - turno_giocatore = 02.[content]      esempio: 02.g1
+
+
