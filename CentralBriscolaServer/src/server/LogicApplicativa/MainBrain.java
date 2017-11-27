@@ -6,7 +6,7 @@
 package Server.LogicApplicativa;
 
 //import logicaapplicativa.FourPlayersBrain;
-import centralbriscolaserver.Protocollo;
+import centralbriscolaserver.ServerProtocoll;
 import centralbriscolaserver.User;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class MainBrain {
     private int nGiocatori;
     public static Writer game;
     public String roomName;
-    private Protocollo p;
+    private ServerProtocoll p;
     
     public MainBrain(int ng, String name) throws IOException{
         mazzo = new ArrayList();
@@ -61,7 +61,7 @@ public class MainBrain {
     
     public void addUser(User user) throws IOException{
         if (users.isEmpty()){
-            p = new Protocollo(user);
+            p = new ServerProtocoll(user);
         }
         
         users.add(user);
@@ -90,7 +90,7 @@ public class MainBrain {
     }
     //quando un creatore esce dalla propria stanza essa viene distutta
     private void destroy(User host) {
-        Protocollo p = new Protocollo(host);
+        ServerProtocoll p = new ServerProtocoll(host);
         p.removeRoom(this.roomName);
         p.exitGame(host.getNickname());
         

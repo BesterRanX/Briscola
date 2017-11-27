@@ -8,7 +8,7 @@ package Client.GUI;
 import GUI.IstruzioneCarta;
 import Client.ClientThread;
 import static Client.GUI.Main.menu;
-import Client.Protocollo;
+import Client.ClientProtocoll;
 import java.awt.*;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -37,7 +37,7 @@ public class JPanelLogin extends javax.swing.JPanel {
     private BufferedImage [] cartaIstruzione;
     private InetAddress addr;
     private ClientThread clientThread;
-    private static Protocollo proto = new Protocollo();
+    private static ClientProtocoll proto = new ClientProtocoll();
     
     
     public JPanelLogin()  {

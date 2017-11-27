@@ -42,7 +42,7 @@ public final class User extends Thread{
     
     /************** OPERATORS ***************/
     private void decodeMessage(String msg) throws IOException{
-        Protocollo proto = new Protocollo(msg,this);
+        ServerProtocoll proto = new ServerProtocoll(msg,this);
         System.out.println("Decodifico " + proto.getHeader(msg));
         System.out.println(proto.route(msg));
     }

@@ -47,7 +47,7 @@ public class CentralServerChatter extends Thread{
     }
     
     public void decodeMessage(String msg) throws IOException{
-        Protocollo p = new Protocollo();
+        ClientProtocoll p = new ClientProtocoll();
         System.out.println("messaggio " + msg);
         System.out.println("Decodifico dal server " + p.route(msg));
         

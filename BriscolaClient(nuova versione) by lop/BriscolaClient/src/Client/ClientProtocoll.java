@@ -13,15 +13,22 @@ import Client.GUI.JPanelLogin;
  *
  * @author n.lo piccolo
  */
-public class Protocollo {
+
+/*
+Legenda:
+- ** = fatto;
+- *? = fato da testare;
+- *- = da fare;
+*/
+public class ClientProtocoll {
     
     private static final String bootstrap = "01.";
     
     private static final String turno_giocatore = "02.";
     
     private static final String gameHeader = "04.";
-    private static final String joingame = "jon.";
-    private static final String exitgame = "exg.";
+    private static final String joinGame = "jon.";
+    private static final String exitGame = "exg.";
     
     private static final String winRound = "05.";
     
@@ -46,7 +53,10 @@ public class Protocollo {
     private static String g3 = null;
     private static String g4 = null;
     
-    public Protocollo () {
+    //Stringa che tiene conto del turno attuale
+    public static String turno = null;
+    
+    public ClientProtocoll () {
     }
     
     //metodi generali
@@ -64,22 +74,21 @@ public class Protocollo {
      public String getContent(String msg){
         return msg.substring(3);
     }
-    //metodo di spacchettamento
+    //metodo di spacchettamento *?
     public String route(String msg){
         
         String  header = getHeader(msg);
         String identifier = null;
         switch(header) {
-            case turno_giocatore: { pacchetto = turnoGiocatore(msg); break;}
+            case turno_giocatore: { turnoGiocatore(msg); break;}
             case gameHeader: {
                 identifier = getIdentifier(msg);
                 
                 switch(identifier) {
-                    case joingame: {pacchetto = joinGame(msg); break;}
-                    case exitgame: {pacchetto = exitGame(msg); break;}
+                    /*case joinGame: {pacchetto = joinGame(msg); break;}*/
+                    case exitGame: {pacchetto = exitGame(msg); break;}
                 }
                 break;}
-            case exitgame: { pacchetto = exitGame(msg); break;}
             
             case winRound: { pacchetto = winRound(msg); break;}
             
@@ -112,75 +121,75 @@ public class Protocollo {
     //impacchettamento per invio al server
     
     //il pacchetto conterrà header+nome es. 01.pippo
-    //solo invio al server
+    //solo invio al server **
     public String sendBootstrap(String nome) {
         pacchetto = bootstrap;
         pacchetto = pacchetto + nome;
         return pacchetto;
     }
-    //Questo metodo ritorna il giocatore che deve giocare la carta
-    public String turnoGiocatore(String msg) {
-        String turno = null;
-        turno = getIdentifier(msg);
-        return turno;    
+    //Questo metodo ritorna il giocatore che deve giocare la carta *?
+    public void turnoGiocatore(String msg) {
+        turno = msg.substring(3,6); 
+        //capire come usare questa variabile dovrebbe esssere 
+        //a tutti i client inviata in broadcast.
     }
-    //ricezione nuovo utente entrato nella stanza
-    public String joinGame(String msg) {
-        pacchetto = getIdentifier(msg);
+    //ricezione nuovo utente entrato nella stanza SERV ER errore mio **
+    public String joinGame(String nro, String nick) {
+        pacchetto = gameHeader + joinGame + nro + "." + nick;
         return pacchetto;
     }
-
+    //*-
     public String exitGame(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;    
     }
-
+    //*-
     public String winRound(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;
     }
-
+    //*-
     public String getMano(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;    
     }
-
+    //*-
     public String getCard(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;
     }
-
+    //*-
     public String messageChat(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;    
     }
-
+    //*-
     public String briscola(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;   
     }
-
+    //*-
     public String syncRoom(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;    
     }
-
+    //*-
     public void UpdateRoomName(String roomName) {
         String room;
         room = getContentId(roomName);
         JPanelLogin.updateRooms(room);
     }
-    
+    //*-
     public String createRoom2p(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;
     }
-
+    //*-
     public String createRoom4p(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;
     }
-
+    //*-
     public String removeRoom(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;
