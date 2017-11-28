@@ -29,7 +29,7 @@ public class BriskServer extends Thread{
     /************ CONSTRUCTOR *************/
     public BriskServer(int port){
         usersConnected = new ArrayList();
-        rooms = new ArrayList();
+        rooms = new ArrayList<>();
         
         try{
             mainSocket = new ServerSocket(port);
@@ -108,5 +108,13 @@ public class BriskServer extends Thread{
             System.out.println(host.getNickname() + " e entrato nella stanza " + roomName);
             updateRooms();
         } catch (Exception ex) {}
+    }
+
+    public String getRooms() {
+        String dat_room = "";
+        for (MainBrain mainbrain : rooms){
+            dat_room += mainbrain.roomName + "-";
+        }
+        return dat_room;
     }
 }

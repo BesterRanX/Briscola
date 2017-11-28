@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/M:/The%20Briscola%20Project/CentralBriscolaServer/src/centralbriscolaserver/ServerProtocoll.java</file>
+            <file>file:/C:/Users/x.ruan/Desktop/CentralBriscolaServer/src/server/BriskServer.java</file>
+            <file>file:/C:/Users/x.ruan/Desktop/CentralBriscolaServer/src/centralbriscolaserver/CentralBriscolaServer.java</file>
+            <file>file:/C:/Users/x.ruan/Desktop/CentralBriscolaServer/src/centralbriscolaserver/User.java</file>
+            <file>file:/C:/Users/x.ruan/Desktop/CentralBriscolaServer/src/centralbriscolaserver/ServerProtocol.java</file>
+            <file>file:/C:/Users/x.ruan/Desktop/CentralBriscolaServer/src/server/LogicApplicativa/MainBrain.java</file>
+            <file>file:/C:/Users/x.ruan/Desktop/CentralBriscolaServer/src/server/LogicApplicativa/TwoPlayersBrain.java</file>
         </group>
     </open-files>
 </project-private>

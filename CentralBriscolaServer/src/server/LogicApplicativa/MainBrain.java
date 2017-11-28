@@ -6,7 +6,6 @@
 package Server.LogicApplicativa;
 
 //import logicaapplicativa.FourPlayersBrain;
-import centralbriscolaserver.ServerProtocoll;
 import centralbriscolaserver.User;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ public class MainBrain {
     private int nGiocatori;
     public static Writer game;
     public String roomName;
-    private ServerProtocoll p;
     
     public MainBrain(int ng, String name) throws IOException{
         mazzo = new ArrayList();
@@ -57,13 +55,11 @@ public class MainBrain {
         Collections.shuffle(mazzo);
     }
     
-    
+    public User getHost(){
+        return users.get(0);
+    }
     
     public void addUser(User user) throws IOException{
-        if (users.isEmpty()){
-            p = new ServerProtocoll(user);
-        }
-        
         users.add(user);
         if (users.size() == nGiocatori){
             if (nGiocatori == 2) {
@@ -79,20 +75,20 @@ public class MainBrain {
     }
     
     public void removeUser(User user){
-        p.exitGame(user.getNickname());
-        if (user.equals(users.get(0))){
-            destroy(user);
+        getHost().getDecoder().sendExitGame(user.getNickname());
+        if (user.equals(getHost())){
+            destroy();
         }
-        else {
-            
-            users.remove(user);
-        }
+        else {users.remove(user);}
     }
     //quando un creatore esce dalla propria stanza essa viene distutta
-    private void destroy(User host) {
-        ServerProtocoll p = new ServerProtocoll(host);
-        p.removeRoom(this.roomName);
-        p.exitGame(host.getNickname());
-        
+    private void destroy() {
+        getHost().getDecoder().sendRemoveRoom(this.roomName);
+    }
+    
+    public void broadcastMessage(String pacchetto){
+        for (User user : users){
+            user.writeSocket(pacchetto);
+        }
     }
 }

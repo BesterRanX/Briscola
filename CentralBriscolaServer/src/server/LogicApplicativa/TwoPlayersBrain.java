@@ -25,8 +25,6 @@ public class TwoPlayersBrain extends Thread{
     private TwoPlayersABU abu;
     private Carta briscola;
     
-    
-    
     public TwoPlayersBrain(ArrayList mazzo) throws IOException{
         this.mazzo = mazzo;
         carteGiocate = new ArrayList();

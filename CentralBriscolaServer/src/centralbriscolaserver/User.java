@@ -19,30 +19,30 @@ public final class User extends Thread{
     private String nickname;
     public UserSocket connectedSocket;
     private MainBrain ingame = null;
-    
+    private ServerProtocol decoder;
     
     /************* CONSTRUCTORS *************/
     public User(BriskServer server, UserSocket userSocket, String _nickname) throws IOException{
         connectedSocket = userSocket;
         connectedServer = server;
+        decoder = new ServerProtocol(this);
         setName(_nickname);
         
         start();
         connectedServer.updateRooms();
-        
     }
     
     public User(BriskServer server, UserSocket usercnt) throws IOException{
         connectedSocket = usercnt;
         connectedServer = server;
-        
+        decoder = new ServerProtocol(this);
         start();
         connectedServer.updateRooms();
     }
     
     /************** OPERATORS ***************/
     private void decodeMessage(String msg) throws IOException{
-        ServerProtocoll proto = new ServerProtocoll(msg,this);
+        ServerProtocol proto = new ServerProtocol(this);
         System.out.println("Decodifico " + proto.getHeader(msg));
         System.out.println(proto.route(msg));
     }
@@ -63,6 +63,14 @@ public final class User extends Thread{
                 System.out.println(nickname + " si e disconnesso");
             }
         }
+    }
+    
+    public MainBrain getGame(){
+        return ingame;
+    }
+    
+    public ServerProtocol getDecoder(){
+        return decoder;
     }
     
     public String getNickname(){
