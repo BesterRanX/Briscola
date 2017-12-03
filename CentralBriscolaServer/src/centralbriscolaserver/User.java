@@ -5,10 +5,10 @@
  */
 package centralbriscolaserver;
 
-import Server.LogicApplicativa.MainBrain;
+import server.LogicApplicativa.MainBrain;
 import java.io.IOException;
 import server.BriskServer;
-        
+import static centralbriscolaserver.ServerProtocol.*;
 /**
  *
  * @author besterranx
@@ -42,26 +42,39 @@ public final class User extends Thread{
     
     /************** OPERATORS ***************/
     private void decodeMessage(String msg) throws IOException{
-        ServerProtocol proto = new ServerProtocol(this);
-        System.out.println("Decodifico " + proto.getHeader(msg));
-        System.out.println(proto.route(msg));
+        System.out.println("Decodifico " + decoder.getHeader(msg));
+        System.out.println(decoder.route(msg));
     }
     
     /************** METHODS ****************/
     @Override
-    public void run(){
-        while(true){
-            try {
+    public void run() {
+        try {
+            while (true) {
                 String message = connectedSocket.readFromSocket();
                 System.out.println(message);
                 decodeMessage(message);
-            } catch (IOException ex) {
-                //resolve
-                if(isInGame()) leaveGame(ingame);
-                connectedServer.disconnectUser(this);
-                
-                System.out.println(nickname + " si e disconnesso");
             }
+        } catch (Exception ex) {
+            //resolve
+            if (isInGame()) {
+                leaveGame(ingame);
+            }
+            connectedServer.disconnectUser(this);
+            System.out.println(nickname + " si e disconnesso");
+        }
+    }
+    
+    public String readPlayer_Card(){
+        while(true){
+           try{
+               String pacchetto = connectedSocket.readFromSocket();
+               if (getHeader(pacchetto).equals(cardHeader) && 
+                   getIdentifier(pacchetto).equals(play_card)){
+                   System.out.println(pacchetto);
+                   return pacchetto;
+               }
+           }catch(Exception ex){}
         }
     }
     
@@ -81,6 +94,16 @@ public final class User extends Thread{
         else return true;
     }
     
+    public void joinGame(String roomName) {
+        MainBrain game = connectedServer.getRoomByName(roomName);
+        if (game != null) {
+            try {
+                game.addUser(this);
+            } catch (Exception ex) {
+            }
+            ingame = game;
+        }
+    }
     
     public void joinGame(MainBrain game){
         try{

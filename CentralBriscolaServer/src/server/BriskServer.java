@@ -5,7 +5,7 @@
  */
 package server;
 
-import Server.LogicApplicativa.MainBrain;
+import server.LogicApplicativa.MainBrain;
 import centralbriscolaserver.CentralBriscolaServer;
 import centralbriscolaserver.UserSocket;
 import centralbriscolaserver.User;
@@ -89,6 +89,13 @@ public class BriskServer extends Thread{
         }
     }
     
+    public MainBrain getRoomByName(String name){
+        MainBrain targetRoom = null;
+        for (MainBrain room : rooms){
+            if (room.roomName.equals(name)) targetRoom = room;
+        }
+        return targetRoom;
+    }
     public MainBrain createRoom(int nPlayers, String roomName){
         MainBrain room = null;
         try {

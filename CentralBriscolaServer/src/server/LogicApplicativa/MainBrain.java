@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server.LogicApplicativa;
+package server.LogicApplicativa;
 
 //import logicaapplicativa.FourPlayersBrain;
+import Server.LogicApplicativa.Writer;
 import centralbriscolaserver.User;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class MainBrain {
     public MainBrain() {
         
     }
-    
+ 
     private void stampaMazzo(){
         for(int i = 0; i < 40; i++){
             Carta c = (Carta) mazzo.get(i);
@@ -63,7 +64,7 @@ public class MainBrain {
         users.add(user);
         if (users.size() == nGiocatori){
             if (nGiocatori == 2) {
-                new TwoPlayersBrain(mazzo);
+                new TwoPlayersBrain(mazzo, users);
             } else if (nGiocatori == 4) {
                 new FourPlayersBrain(mazzo);
             }

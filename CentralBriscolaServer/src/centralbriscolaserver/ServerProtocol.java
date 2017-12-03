@@ -12,51 +12,55 @@ package centralbriscolaserver;
  * @author n.lo piccolo
  */
 public class ServerProtocol {
-    private static final String bootstrap = "01.";
+    public static final String bootstrap = "01.";
+    public static final String beginMatch = "03.";
+    public static final String turno_giocatore = "02.";
     
-    private static final String turno_giocatore = "02.";
+    public static final String gameHeader = "04.";
+    public static final String joinGame = "jon.";
+    public static final String exitGame = "exg.";
     
-    private static final String gameHeader = "04.";
-    private static final String joinGame = "jon.";
-    private static final String exitGame = "exg.";
+    public static final String winRound = "05.";
+    public static final String playCard = "";
     
-    private static final String winRound = "05.";
-    private static final String playCard = "";
+    public static final String cardHeader = "06.";
+    public static final String get_mano = "hnd.";
+    public static final String get_card = "crd.";
+    //NUOVO!!
+    public static final String play_card = "ply.";
     
-    private static final String cardHeader = "06.";
-    private static final String get_mano = "hnd.";
-    private static final String get_card = "crd.";
+    public static final String messagechat = "09.";
     
-    private static final String messagechat = "09.";
+    public static final String briscola = "11.";
     
-    private static final String briscola = "11.";
+    public static final String roomHeader = "12.";
+    public static final String enterRoom = "ent.";//12.ent.roomname
+    public static final String sync_room = "syn.";
+    public static final String get_room_name = "get.";
+    public static final String create_room_2p = "cr2.";
+    public static final String create_room_4p = "cr4.";
+    public static final String remove_room = "rmv.";
     
-    private static final String roomHeader = "12.";
-    private static final String sync_room = "syn.";
-    private static final String get_room_name = "get.";
-    private static final String create_room_2p = "cr2.";
-    private static final String create_room_4p = "cr4.";
-    private static final String remove_room = "rmv.";
     private User user;
-    
-    public ServerProtocol ( User _user) {
+    private String pacchetto = null;
+    /************* CONSTRUCTOR ***************/
+    public ServerProtocol (User _user) {
         user = _user;
     }
-    
-    //metodo del setHost
-    //metodi generali
-     public String getHeader(String msg){
+
+    /************* METODI GENERALI STATICI **************/
+     public static String getHeader(String msg){
         return msg.substring(0, 3);
     }
-     public String getIdentifier(String msg){
+     public static String getIdentifier(String msg){
         return msg.substring(3,7);
     }
      //prende il contenuto nel caso in cui ci sia un identifier
-     public String getContentId(String msg){
+     public static String getContentId(String msg){
         return msg.substring(7);
     }
      //prende il contenuto nel caso in cui non ci sia un identifier
-     public String getContent(String msg){
+     public static String getContent(String msg){
         return msg.substring(3);
     }
     //metodo di spacchettamento
@@ -65,7 +69,6 @@ public class ServerProtocol {
         String  header = getHeader(msg);
         System.out.println("Header: " + header);
         String identifier = null;
-        String pacchetto = null;
         
         switch(header) {
             /************** decode *************/
@@ -79,13 +82,9 @@ public class ServerProtocol {
                 break;
             }
             
-            case winRound: { sendWinRound(msg); break;}
+            case winRound: { sendWonRound(msg); break;}
             
             case cardHeader: {
-                identifier = getIdentifier(msg);
-                switch(identifier) {
-                    case get_card: {sendCard(msg); break;}
-                }
                 break;
             }
             
@@ -106,40 +105,58 @@ public class ServerProtocol {
     }
     
     //Questo metodo ritorna il giocatore che deve giocare la carta **
-    public String sendTurnoGiocatore(String turno) {
-        System.out.println("Sto Inviando" + turno_giocatore + turno); 
-        return turno_giocatore + turno;
+    public void sendTurnoGiocatore(String turno) {
+        pacchetto = turno_giocatore + turno;
+        System.out.println("Sto Inviando " + pacchetto);
+        user.getGame().broadcastMessage(pacchetto);
     }
     
     //segnala ai client un nuovo utente entrato nella stanza **
+    //codificare il nome come 001,002,003,004 per non avere problemi nel client
     public void sendJoinGame(String nro, String nick) {
-        String pacchetto = gameHeader + joinGame + nro + "." + nick;
+         pacchetto = gameHeader + joinGame + nro + "." + nick;
+        System.out.println("Sto Inviando " + pacchetto);
         user.getGame().broadcastMessage(pacchetto);
     }
 
     //segnala che un utente si è disconesso **
     public void sendExitGame(String utente) {
-        String pacchetto = gameHeader + exitGame + utente;
+        pacchetto = gameHeader + exitGame + utente;
         System.out.println("Sto Inviando" + pacchetto);
         user.getGame().broadcastMessage(pacchetto);
     }
     
-    //Bho *-
-    public String sendWinRound(String msg) {
-        return getIdentifier(msg);
+    //invia il numero del giocatore che ha vinto la mano **
+    public void sendWonRound(String nro) {
+        pacchetto = winRound + nro;
+        System.out.println("Sto Inviando" + pacchetto);
+        user.getGame().broadcastMessage(pacchetto);
     }
     
     //segnala la mano iniziale del giocatore **
     public void sendMano(String c1,String c2,String c3) {
         String pacchetto = cardHeader + get_mano + (c1 + "-" + c2 + "-" + c3);
+        System.out.println("Sto Inviando" + pacchetto);
         user.writeSocket(pacchetto);
     }
     
-    //segnala al utente la carta pescata **
+    //segnala al server la carta giocata *?
+    public void playedCard(String msg) {
+        String g = null;
+        String carta = null;
+        String pos = null;//posizione della carta nella mano
+        carta = getIdentifier(msg);
+        g =  msg.substring(7,10);
+        pos =  msg.substring(11,14);
+        System.out.println(g + " gioca " + carta + " nella posizione " + pos);
+        //metodo che decide cosa fare con tali info
+    }
     public void sendCard(String carta) {
-        String pacchetto = cardHeader + get_card + carta;
+        pacchetto = cardHeader + get_card + carta;
+        System.out.println("Sto Inviando" + pacchetto);
         user.writeSocket(pacchetto);
     }
+    
     
     //DA IMPLEMENTARE
     public String messageChat(String msg) {
@@ -150,13 +167,17 @@ public class ServerProtocol {
         return getIdentifier(msg);
     }
     
-    //*-
+    public void receiveEnterRoom(String msg) {
+       String roomName = getContent(msg);
+       user.joinGame(roomName);
+    }
+    //**
     public void sendSyncRoom(String msg) {
         String pacchetto = roomHeader + sync_room + user.connectedServer.getRooms();
         user.connectedServer.broadcastMessage(pacchetto);
     }
     
-    //*-
+    //**
     public void sendRoomName(String roomname) {
        String pacchetto = roomHeader + get_room_name + roomname;
        user.connectedServer.broadcastMessage(pacchetto);

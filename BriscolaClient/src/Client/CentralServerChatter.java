@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package Client;
+
+import Client.GUI.JPanelLogin;
+import static Client.Protocollo.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,14 +49,27 @@ public class CentralServerChatter extends Thread{
         return socket_reader.readLine();
     }
     
-    public void decodeMessage(String msg) throws IOException{
-        ClientProtocol p = new ClientProtocol();
-        System.out.println("messaggio " + msg);
-        System.out.println("Decodifico dal server " + p.route(msg));
-        
+    private void decodeMessage(String msg) throws IOException{
+        System.out.println("Decodifico dal server " + getHeader(msg));
+        switch(getHeader(msg)){
+            case play_card:{
+                String carta_giocata = getContent(msg);
+                break;
+            }
+            case newServer:{
+                JPanelLogin.updateRooms(getContent(msg));
+                break;
+            }
+            case disconnectGame:{
+                disconnect();
+                break;
+            }
         }
+    }
     
     private void disconnect() throws IOException{
         socket.close();
-    }  
+    }
+    
+    
 }

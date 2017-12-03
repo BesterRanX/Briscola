@@ -33,13 +33,14 @@ public class Writer extends Thread{
     }
     
     public String gioca() throws IOException{
-        String c = "";
+        String carta = players.get(0).connectedSocket.readFromSocket();
+        /*String c = "";
         if(turno%2 == 0) c = "g1";
         else c = "g2";
         System.out.print("Gioca" + ":  ");
         c += myInput.readLine();
-        turno++;
-        return c;
+        turno++;*/
+        return carta;
     }
     
     public void writeTo(String msg, String target) throws IOException{

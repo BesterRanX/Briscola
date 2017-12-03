@@ -57,8 +57,6 @@ public class JPanelGame extends javax.swing.JPanel {
         JLabelG23 = new javax.swing.JLabel();
         JLabelG21 = new javax.swing.JLabel();
         JLabelG11b = new javax.swing.JLabel();
-        JPanelAttesa = new javax.swing.JPanel();
-        JLabelAttesa = new javax.swing.JLabel();
 
         JLabelMazzo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Client/Immagini/yugiohOrrizzontale.png"))); // NOI18N
 
@@ -220,27 +218,6 @@ public class JPanelGame extends javax.swing.JPanel {
             }
         });
 
-        JPanelAttesa.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-
-        JLabelAttesa.setText("Attendi il giocatore avversario...");
-
-        javax.swing.GroupLayout JPanelAttesaLayout = new javax.swing.GroupLayout(JPanelAttesa);
-        JPanelAttesa.setLayout(JPanelAttesaLayout);
-        JPanelAttesaLayout.setHorizontalGroup(
-            JPanelAttesaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPanelAttesaLayout.createSequentialGroup()
-                .addContainerGap(60, Short.MAX_VALUE)
-                .addComponent(JLabelAttesa, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58))
-        );
-        JPanelAttesaLayout.setVerticalGroup(
-            JPanelAttesaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JPanelAttesaLayout.createSequentialGroup()
-                .addGap(84, 84, 84)
-                .addComponent(JLabelAttesa, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -257,9 +234,7 @@ public class JPanelGame extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(JPanelPunteggi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(133, 133, 133)
-                        .addComponent(JPanelAttesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(191, 191, 191)))
+                        .addGap(681, 681, 681)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(JButtonEsci)
@@ -292,8 +267,6 @@ public class JPanelGame extends javax.swing.JPanel {
                     .addComponent(JLabelG23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JLabelG22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JLabelG21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(63, 63, 63)
-                .addComponent(JPanelAttesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(JLabelG13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -350,7 +323,7 @@ public class JPanelGame extends javax.swing.JPanel {
     private void JLabelG11bMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JLabelG11bMouseClicked
         // TODO add your handling code here:
 
-        this.JLabelG11b.setLocation( this.JLabelG11b.getLocation().x,  this.JLabelG11b.getLocation().y-50);
+        this.JLabelG11b.setLocation( this.JLabelG11b.getLocation().x,  this.JLabelG11b.getLocation().y-400);
     }//GEN-LAST:event_JLabelG11bMouseClicked
 
 
@@ -358,7 +331,6 @@ public class JPanelGame extends javax.swing.JPanel {
     private javax.swing.JButton JButtonAbbandona;
     private javax.swing.JButton JButtonContinua;
     private javax.swing.JButton JButtonEsci;
-    private javax.swing.JLabel JLabelAttesa;
     private javax.swing.JLabel JLabelAvvertimento;
     private javax.swing.JLabel JLabelG11;
     private javax.swing.JLabel JLabelG11b;
@@ -369,7 +341,6 @@ public class JPanelGame extends javax.swing.JPanel {
     private javax.swing.JLabel JLabelG23;
     private javax.swing.JLabel JLabelMazzo;
     private javax.swing.JLabel JLabelPunteggi;
-    private javax.swing.JPanel JPanelAttesa;
     private javax.swing.JPanel JPanelPunteggi;
     private javax.swing.JPanel JPanelUscita;
     private javax.swing.JLabel LabelG1;

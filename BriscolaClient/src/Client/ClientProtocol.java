@@ -36,11 +36,14 @@ public class ClientProtocol {
     private static final String get_mano = "hnd.";
     private static final String get_card = "crd.";
     
+    private static final String play_card = "ply.";
+    
     private static final String messagechat = "09.";
     private static final String briscola = "11.";
     
     private static final String roomHeader = "12.";
     private static final String sync_room = "syn.";
+    public static final String enterRoom = "ent.";//12.ent.roomname
     private static final String get_room_name = "get.";
     private static final String create_room_2p = "cr2.";
     private static final String create_room_4p = "cr4.";
@@ -53,10 +56,15 @@ public class ClientProtocol {
     private static String g3 = null;
     private static String g4 = null;
     
+    private ClientThread user;
+    
     //Stringa che tiene conto del turno attuale
     public static String turno = null;
+    //Stringa che tiene conto della posizione dell'ultima carta giocata
+    private String posizione_mancante = null;
     
-    public ClientProtocol () {
+    public ClientProtocol (ClientThread client) {
+        user = client;
     }
     
     //metodi generali
@@ -85,18 +93,18 @@ public class ClientProtocol {
                 identifier = getIdentifier(msg);
                 
                 switch(identifier) {
-                    /*case joinGame: {pacchetto = joinGame(msg); break;}*/
-                    case exitGame: {pacchetto = exitGame(msg); break;}
+                    case joinGame: {joinGame(msg); break;}
+                    case exitGame: {exitGame(msg); break;}
                 }
                 break;}
             
-            case winRound: { pacchetto = winRound(msg); break;}
+            case winRound: { wonRound(msg); break;}
             
             case cardHeader: {
                 identifier = getIdentifier(msg);
                 switch(identifier) {
-                    case get_mano: { pacchetto = getMano(msg); break;}
-                    case get_card: { pacchetto = getCard(msg); break;}
+                    case get_mano: {getMano(msg); break;}
+                    case get_card: { getCard(msg); break;}
                 }
                 break;}
             
@@ -109,8 +117,8 @@ public class ClientProtocol {
                 switch(identifier) {
                     case sync_room: { pacchetto = syncRoom(msg);break;}
                     case get_room_name: { UpdateRoomName(msg);break;}
-                    case create_room_2p: { pacchetto = createRoom2p(msg);break;}
-                    case create_room_4p: { pacchetto = createRoom4p(msg);break;}
+                    case create_room_2p: { createRoom2p(msg);break;}
+                    case create_room_4p: { createRoom4p(msg);break;}
                     case remove_room: { pacchetto = removeRoom(msg);break;}
                 }
                 break;}
@@ -129,44 +137,14 @@ public class ClientProtocol {
     }
     //Questo metodo ritorna il giocatore che deve giocare la carta *?
     public void turnoGiocatore(String msg) {
-        turno = msg.substring(3,6); 
-        //capire come usare questa variabile dovrebbe esssere 
-        //a tutti i client inviata in broadcast.
+        turno = getContent(msg);
+        //turno contiene il nro del giocatore che deve giocare la carta 
     }
-    //ricezione nuovo utente entrato nella stanza SERV ER errore mio **
-    public String joinGame(String nro, String nick) {
-        pacchetto = gameHeader + joinGame + nro + "." + nick;
-        return pacchetto;
-    }
-    //*-
-    public String exitGame(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;    
-    }
-    //*-
-    public String winRound(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;
-    }
-    //*-
-    public String getMano(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;    
-    }
-    //*-
-    public String getCard(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;
-    }
-    //*-
-    public String messageChat(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;    
-    }
-    //*-
-    public String briscola(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;   
+     //non lo modifico ma è da fare
+    public String playCard(String carta, int position){
+        //posizione.carta
+        posizione_mancante = Integer.toString(position);
+        return cardHeader + play_card + Integer.toString(position)+"."+ carta; 
     }
     //*-
     public String syncRoom(String msg) {
@@ -180,19 +158,74 @@ public class ClientProtocol {
         JPanelLogin.updateRooms(room);
     }
     //*-
-    public String createRoom2p(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;
+    public void createRoom2p(String nome) {
+        pacchetto = roomHeader + create_room_2p + nome;
+        System.out.println("Sto inviando "+ pacchetto);
+        user.writeToServer(pacchetto);
     }
     //*-
-    public String createRoom4p(String msg) {
-        pacchetto = getIdentifier(msg);
-        return pacchetto;
+    public void createRoom4p(String nome) {
+        pacchetto = roomHeader + create_room_4p + nome;
+        System.out.println("Sto inviando "+ pacchetto);
+        user.writeToServer(pacchetto);
     }
+
     //*-
     public String removeRoom(String msg) {
         pacchetto = getIdentifier(msg);
         return pacchetto;
     }
     
+    //RICEZIONE DA SERVER
+    public void joinGame(String msg) {
+        String nro = null;
+        String nick = null;
+        nro = msg.substring(7,10); //ne sono poco sicuro da verificare
+        nick = msg.substring(12); //ne sono poco sicuro da verificare
+        switch (nro) {
+            case "001": { g1 = nick; break; }
+            case "002": { g2 = nick; break; }
+            case "003": { g3 = nick; break; }
+            case "004": { g4 = nick; break; }
+        }
+    }
+    
+    public void exitGame(String msg) {
+        String exit = null;
+        exit = getContentId(msg);
+        System.out.println(exit + " é uscito");
+    }
+    
+    public void wonRound(String msg) {
+        String g = null;
+        g = getContentId(msg);//giocatore che ha vinto la mano
+        System.out.println(g + " Vince la mano");
+        //metodo che decide cosa fare con tali info (calcolo del punteggio)
+    }
+
+    public void getMano(String msg) {
+        //String pacchetto = cardHeader + get_mano + (c1 + "-" + c2 + "-" + c3);
+        String c1,c2,c3;
+        c1 = msg.substring(7,10); 
+        c2 = msg.substring(11,14);
+        c3 = msg.substring(15,18);
+        System.out.println(c1 + " " + c2 + " " + c3);
+        //metodo che inserisce le carte nella mano
+    }
+
+    public void getCard(String msg) {
+        String newCard = null;
+        newCard = getContentId(msg);
+        //da finire
+    }
+    
+    public String messageChat(String msg) {
+        pacchetto = getIdentifier(msg);
+        return pacchetto;    
+    }
+
+    public String briscola(String msg) {
+        pacchetto = getIdentifier(msg);
+        return pacchetto;   
+    }
 }
